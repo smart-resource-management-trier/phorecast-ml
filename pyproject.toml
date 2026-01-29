@@ -1,0 +1,18 @@
+# pyproject.toml
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phorecast_ml"
+version = "0.2.0"
+description = "PV-Forecasting Toolkit"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Dein Name", email = "you@example.com" }]
+requires-python = ">=3.12"
+dependencies = ["numpy", "pandas", "tensorflow", "keras", "pvlib"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["phorecast_ml*"]
