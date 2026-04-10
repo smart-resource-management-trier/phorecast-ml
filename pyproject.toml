@@ -1,6 +1,5 @@
-# pyproject.toml
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,10 +7,32 @@ name = "phorecast_ml"
 version = "0.2.0"
 description = "PV-Forecasting Toolkit"
 readme = "README.md"
-license = { text = "MIT" }
-authors = [{ name = "Dein Name", email = "you@example.com" }]
+license = "MIT"
+
+authors = [
+  { name = "Smart Resource Management Trier" }
+]
+
+maintainers = [
+  { name = "Felix Theusch", email = "felix.theusch@dfki.de" },
+  { name = "Dr. Joscha Grüger", email = "joscha.grueger@dfki.de" },
+  { name = "Sascha Stülb", email = "sascha.stuelb@dfki.de" }
+]
+
 requires-python = ">=3.12"
-dependencies = ["numpy", "pandas", "tensorflow", "keras", "pvlib"]
+
+dependencies = [
+  "numpy",
+  "pandas",
+  "tensorflow",
+  "keras",
+  "pvlib"
+]
+
+[project.urls]
+Homepage = "https://github.com/EURE-ORG/phorecast_ml"
+Repository = "https://github.com/EURE-ORG/phorecast_ml"
+Issues = "https://github.com/EURE-ORG/phorecast_ml/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
