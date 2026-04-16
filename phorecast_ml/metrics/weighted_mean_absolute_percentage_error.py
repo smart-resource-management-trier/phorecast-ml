@@ -3,8 +3,8 @@ from keras import backend as K
 from keras import ops
 
 
-@keras.saving.register_keras_serializable(package="Metrics", name="wMAPE")
-def sum_difference_metric(y_true, y_pred):
+
+def weighted_mean_absolute_percentage_error(y_true, y_pred):
     """
     This metric is used to calculate the wMAPE
     :param y_true: ground truth tensor
@@ -17,7 +17,6 @@ def sum_difference_metric(y_true, y_pred):
 
     return numerator / (denominator + K.epsilon())
 
-sum_difference_metric.__name__ = "wMAPE"
 
 
 class WeightedMeanAbsolutePercentageError(keras.metrics.Metric):

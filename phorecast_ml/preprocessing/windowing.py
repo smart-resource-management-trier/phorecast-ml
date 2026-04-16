@@ -73,6 +73,10 @@ def get_dataset_from_windows(windows: list[pandas.DataFrame], target: str = "Tar
         parameters)
     """
 
+    if len(windows) == 0:
+        return (numpy.array([]), numpy.array([])), []
+
+
     x, y, index = [], [], []
     window_size = len(windows[0])
     columns = [col for col in windows[0].columns if col != target]

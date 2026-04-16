@@ -1,5 +1,5 @@
 """
-phorecast_core – Toolkit für PV-Daten, Vorverarbeitung und Forecasting.
+phorecast_ml – Toolkit für PV-Daten, Vorverarbeitung und Forecasting.
 """
 
 from __future__ import annotations
@@ -9,7 +9,7 @@ from __future__ import annotations
 # ----------------------------------------------------------
 try:
     from importlib.metadata import version as _version
-    __version__ = _version("phorecast-core")
+    __version__ = _version("phorecast_ml")
 except Exception:
     __version__ = "0.0.0"   # Fallback für Editable Installs
 
@@ -19,11 +19,58 @@ except Exception:
 # Die Submodule selbst werden NICHT importiert, nur bereitgestellt.
 # So bleibt das Package schnell importierbar.
 __all__ = [
+    "metrics",
     "model",
     "preprocessing",
-    "pipeline",
+    # "pipeline",
     "__version__"
 ]
+
+import numpy as np
+_global_seed: int | None = None
+_global_rng = np.random.default_rng()
+_global_rng_mode = "default"
+
+def set_rng_mode(mode: str = "default"):
+    global _global_rng_mode
+    _global_rng_mode = mode
+
+def set_seed(seed: int) -> None:
+    """
+
+    :param seed:
+    :return:
+    """
+    global _global_seed
+    global _global_rng
+
+    _global_seed = int(seed)
+    _global_rng = np.random.default_rng(seed)
+
+
+def get_seed() -> int | None:
+    """
+
+    :return:
+    """
+
+    return _global_seed
+
+
+def get_rng() -> np.random.Generator:
+    """
+
+    :return:
+    """
+    match _global_rng_mode:
+        case "shared":
+            return _global_rng
+
+        case "independent" | "default":
+            return np.random.default_rng(_global_seed)
+
+        case _:
+            raise ValueError(f"Unknown RNG mode: {_global_rng_mode}")
 
 # ----------------------------------------------------------
 # Lazy Imports bei Zugriff

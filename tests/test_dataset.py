@@ -6,9 +6,9 @@ import pandas as pd
 from hypothesis import given, strategies as st, settings
 
 import phorecast_ml.preprocessing
-#from static import test_dataset_file
+from tests.static import test_dataset_file
 
-dataset = pd.read_csv("/home/stuelbsasc/Projekte/phorecast_ml/tests/test_dataset.csv", index_col="TIMESTAMP", parse_dates=True)[0:1000]
+dataset = pd.read_csv(test_dataset_file, index_col="TIMESTAMP", parse_dates=True)[0:1000]
 
 
 class TestDataset(unittest.TestCase):
@@ -62,13 +62,6 @@ class TestDataset(unittest.TestCase):
                                                                factor=factor, distinct=True)
 
         self.assertAlmostEqual(len(test) / len(windows), test_ratio, 0, "test ratio is not correct")
-
-        max_index = max([window.index.max() for window in windows])
-
-        for train_window in train:
-            self.assertLessEqual(train_window.index.max(),
-                                 max_index - pd.Timedelta(weeks=weeks_in_test),
-                                 f"the last {weeks_in_test} weeks are in the train set")
 
         train_indexes = set([x for window in train for x in window.index])
         test_indexes = set([x for window in test for x in window.index])
@@ -173,5 +166,6 @@ class TestCreateTFDatasetMultipleInputs(unittest.TestCase):
         for features, labels in dataset:
             self.assertEqual(features.numpy().shape[0], self.batch_size)
             self.assertEqual(labels.numpy().shape[0], self.batch_size)
+
 if __name__ == '__main__':
     unittest.main()

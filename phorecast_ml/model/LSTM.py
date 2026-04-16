@@ -16,7 +16,7 @@ class LSTM(phorecast_ml.model.BaseModel):
             optimizer: keras.optimizers.Optimizer | str = "adam",
             optimizer_params: dict | None = None,
             learning_rate: float = 1e-3,
-            loss: str | keras.losses.Loss = "mean_absolute_error",
+            loss: str | keras.losses.Loss  = "mean_absolute_error",
             metrics: list | None = None,
             batch_size: int = 32,
             epochs: int = 100,
@@ -44,7 +44,10 @@ class LSTM(phorecast_ml.model.BaseModel):
 
     def train(self, X: numpy.ndarray, y: numpy.ndarray, X_val: numpy.ndarray = None, y_val: numpy.ndarray = None):
         train_data = phorecast_ml.preprocessing.dataset.create_tf_dataset((X, y), 32, shuffle=True)
-        test_data = phorecast_ml.preprocessing.dataset.create_tf_dataset((X_val, y_val), 32)
+
+        test_data = None
+        if X_val is not None and y_val is not None:
+            test_data = phorecast_ml.preprocessing.dataset.create_tf_dataset((X_val, y_val), 32)
 
         self.__model = self._build_model(train_data)
 
@@ -99,18 +102,9 @@ class LSTM(phorecast_ml.model.BaseModel):
 
     def _build_loss(self):
         """
-            Resolve loss configuration to a keras-compatible loss.
-            """
-        # String (Keras built-in)
-        if isinstance(self.loss, str):
-            return self.loss
-
-        # Keras Loss object
-        if isinstance(self.loss, keras.losses.Loss):
-            return self.loss
-
-        # Callable (custom loss)
-        if callable(self.loss):
+        Resolve loss configuration to a keras-compatible loss.
+        """
+        if isinstance(self.loss, str) or isinstance(self.loss, keras.losses.Loss) or callable(self.loss):
             return self.loss
 
         raise TypeError(
@@ -130,19 +124,7 @@ class LSTM(phorecast_ml.model.BaseModel):
         resolved_metrics = []
 
         for metric in self.metrics:
-            # if isinstance(metric, str) and metric.lower() == "wmape":
-            #     resolved_metrics.append(phorecast_ml.metrics.WMAPE.WMAPE())
-            #     continue
-
-            if isinstance(metric, str):
-                if metric.lower() == "wmape":
-                    resolved_metrics.append(phorecast_ml.metrics.weighted_mean_absolute_percentage_error.WeightedMeanAbsolutePercentageError())
-                elif metric.lower() == "sum_difference":
-                    resolved_metrics.append(phorecast_ml.metrics.sum_difference.sum_difference_metric)
-                else:
-                    resolved_metrics.append(metric)
-
-            elif isinstance(metric, keras.metrics.Metric) or callable(metric):
+            if isinstance(metric, str) or isinstance(metric, keras.metrics.Metric) or callable(metric):
                 resolved_metrics.append(metric)
 
             else:
@@ -162,7 +144,6 @@ class LSTM(phorecast_ml.model.BaseModel):
 
         # create input (InputLayer, MaskingLayer, NormalizationLayer)
         model.add(keras.layers.Input((None, num_of_features), batch_size=batch_size))
-        #model.add(keras.layers.Masking(mask_value=0))
 
         # create and adapt normalization layer
         normalization_layer = keras.layers.Normalization(axis=-1)

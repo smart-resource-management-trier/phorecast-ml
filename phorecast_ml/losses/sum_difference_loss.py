@@ -5,6 +5,8 @@ This file contains custom keras objects.
 import keras
 import tensorflow as tf
 
+import phorecast_ml.metrics.sum_difference
+
 
 @keras.saving.register_keras_serializable(package="Losses", name="sum_difference_mae")
 class SumDifferenceLoss(keras.losses.Loss):
@@ -33,7 +35,7 @@ class SumDifferenceLoss(keras.losses.Loss):
         mae = tf.math.reduce_mean(tf.math.abs(y_true - y_pred), axis=-1)
 
         # calculate the sum difference
-        sum_difference = sum_difference_metric(y_true, y_pred)
+        sum_difference = phorecast_ml.metrics.sum_difference.sum_difference_metric(y_true, y_pred)
         sum_difference = tf.math.divide_no_nan(sum_difference, time_dim)
 
         # return the sum of the two
