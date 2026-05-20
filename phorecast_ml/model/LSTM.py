@@ -72,11 +72,11 @@ class LSTM(phorecast_ml.model.BaseModel):
         return self.__model.predict(predict_data, verbose=0)
 
 
-    def save(self, filepath, overwrite=True, zipped=None, **kwargs):
+    def save(self, filepath, overwrite=True, **kwargs):
         if not hasattr(self, "_LSTM__model"):
             raise RuntimeError()
 
-        self.__model.save(filepath=filepath, overwrite=overwrite, zipped=zipped, **kwargs)
+        self.__model.save(filepath=filepath, overwrite=overwrite, **kwargs)
 
 
     def _build_optimizer(self) -> keras.optimizers.Optimizer:
