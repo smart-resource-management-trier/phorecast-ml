@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "phorecast_ml"
-version = "0.2.1"
+version = "0.2.2"
 description = "PV-Forecasting Toolkit"
 readme = "README.md"
 license = "MIT"
